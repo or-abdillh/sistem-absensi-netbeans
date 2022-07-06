@@ -9,6 +9,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.util.Scanner;
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author LABKOM2-17
@@ -43,7 +45,7 @@ public class MMahasiswa extends javax.swing.JFrame {
 
             private void tampilData(){
         try{
-            Object[] judul_kolom = {"NIM", "Semester ", "Nama", "Jenis Kelamin", "Nomor Hp", "Alamat"};
+            Object[] judul_kolom = {"NIM", "semester ", "nama", "kelamin", "no_telp", "Alamat"};
             tabModel=new DefaultTableModel(null,judul_kolom);
             TabelMahasiswa.setModel(tabModel);
             
@@ -51,14 +53,14 @@ public class MMahasiswa extends javax.swing.JFrame {
             Statement stt=conn.createStatement();
             tabModel.getDataVector().removeAllElements();
             
-            RsMahasiswa=stt.executeQuery("SELECT * from mahasiswa ");  
+            RsMahasiswa=stt.executeQuery("SELECT * from mhs ");  
             while(RsMahasiswa.next()){
                 Object[] data={
                     RsMahasiswa.getString("NIM"),
-                    RsMahasiswa.getString("Semester"),
-                    RsMahasiswa.getString("Nama"),
-                    RsMahasiswa.getString("JenisKelamin"),
-                    RsMahasiswa.getString("NomorHp"),
+                    RsMahasiswa.getString("semester"),
+                    RsMahasiswa.getString("nama"),
+                    RsMahasiswa.getString("kelamin"),
+                    RsMahasiswa.getString("no_telp"),
                     RsMahasiswa.getString("Alamat")         
                 };
                tabModel.addRow(data);
@@ -77,7 +79,7 @@ public class MMahasiswa extends javax.swing.JFrame {
 
                private void cariData(String key){
         try{
-            Object[] judul_kolom = {"NIM", "Semester ", "Nama", "Jenis Kelamin", "Nomor Hp", "Alamat"};
+            Object[] judul_kolom = {"NIM", "semester ", "nama", "jenis kelamin", "Nomor Hp", "alamat"};
             tabModel=new DefaultTableModel(null,judul_kolom);
             TabelMahasiswa.setModel(tabModel);
             
@@ -85,15 +87,15 @@ public class MMahasiswa extends javax.swing.JFrame {
             Statement stt=conn.createStatement();
             tabModel.getDataVector().removeAllElements();
             
-            RsMahasiswa=stt.executeQuery("SELECT * from mahasiswa WHERE NIM LIKE '%"+key+"%' OR Semester LIKE '%"+key+"%' OR Nama LIKE '%"+key+"%'");  
+            RsMahasiswa=stt.executeQuery("SELECT * from mhs WHERE NIM LIKE '%"+key+"%' OR semester LIKE '%"+key+"%' OR nama LIKE '%"+key+"%'");  
             while(RsMahasiswa.next()){
                 Object[] data={
                     RsMahasiswa.getString("NIM"),
-                    RsMahasiswa.getString("Semester"),
-                    RsMahasiswa.getString("Nama"),
-                    RsMahasiswa.getString("Jeniskelamin"),
-                    RsMahasiswa.getString("NomorHp"),
-                    RsMahasiswa.getString("Alamat")        
+                    RsMahasiswa.getString("semester"),
+                    RsMahasiswa.getString("nama"),
+                    RsMahasiswa.getString("kelamin"),
+                    RsMahasiswa.getString("no_telp"),
+                    RsMahasiswa.getString("alamat")        
                 };
                tabModel.addRow(data);
             }                
@@ -482,11 +484,11 @@ public class MMahasiswa extends javax.swing.JFrame {
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         // TODO add your handling code here:
         String NIM=jTextNIM.getText();
-        String Semester=jComboBoxSemester.getSelectedItem().toString();
-        String Nama=jTextNama.getText();
-        String Jeniskelamin=jComboBoxJeniskelamin.getSelectedItem().toString();
-        String NomorHP=jTextNomorHP.getText();
-        String Alamat=jTextAlamat.getText();
+        String semester=jComboBoxSemester.getSelectedItem().toString();
+        String nama=jTextNama.getText();
+        String kelamin=jComboBoxJeniskelamin.getSelectedItem().toString();
+        String no_telp=jTextNomorHP.getText();
+        String alamat=jTextAlamat.getText();
 
         java.util.Date tanggal = new java.util.Date();
         java.text.SimpleDateFormat TanggalFormat= new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -495,19 +497,19 @@ public class MMahasiswa extends javax.swing.JFrame {
         if (NIM.isEmpty() ) {
             JOptionPane.showMessageDialog(this,"NIM  tidak boleh kosong");
             jTextNIM.requestFocus();
-        }else if (Semester.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Semester tidak boleh kosong");
+        }else if (semester.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"semester tidak boleh kosong");
             jComboBoxSemester.requestFocus();
-        }else if (Nama.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Nama tidak boleh kosong");
+        }else if (nama.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"nama tidak boleh kosong");
             jTextNama.requestFocus();
-        }else if (Jeniskelamin.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Jenis Kelamin tidak boleh kosong");
+        }else if (kelamin.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"kelamin tidak boleh kosong");
             jComboBoxJeniskelamin.requestFocus();
-        }else if (NomorHP.isEmpty()) {
+        }else if (no_telp.isEmpty()) {
             JOptionPane.showMessageDialog(this,"Nomor HP tidak boleh kosong");
             jTextNomorHP.requestFocus();
-        }else if (Alamat.isEmpty()) {
+        }else if (alamat.isEmpty()) {
             JOptionPane.showMessageDialog(this,"Alamat tidak boleh kosong");
             jTextAlamat.requestFocus();
         }
@@ -518,8 +520,8 @@ public class MMahasiswa extends javax.swing.JFrame {
             try{
                 Connection conn=(Connection)koneksi.koneksiDB();
                 Statement stt=conn.createStatement();
-                stt.executeUpdate("insert into mahasiswa(NIM,Semester,Nama,Jeniskelamin,NomorHP,Alamat,CreateDate)"+
-                    "VALUES('"+NIM+"','"+Semester+"','"+Nama+"','"+Jeniskelamin+"','"+NomorHP+"','"+Alamat+"','"+CreateDate+"')");
+                stt.executeUpdate("insert into mhs(NIM,semester,nama,kelamin,no_telp,alamat)"+
+                    "VALUES('"+NIM+"','"+semester+"','"+nama+"','"+kelamin+"','"+no_telp+"','"+alamat+"')");
                 BersihData();
                 tampilData();
                 SetEditOff();
@@ -533,11 +535,11 @@ public class MMahasiswa extends javax.swing.JFrame {
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
         // TODO add your handling code here:
         String NIM=jTextNIM.getText();
-        String Semester=jComboBoxSemester.getSelectedItem().toString();
-        String Nama=jTextNama.getText();
-        String Jeniskelamin=jComboBoxJeniskelamin.getSelectedItem().toString();
-        String NomorHP=jTextNomorHP.getText();
-        String Alamat=jTextAlamat.getText();
+        String semester=jComboBoxSemester.getSelectedItem().toString();
+        String nama=jTextNama.getText();
+        String kelamin=jComboBoxJeniskelamin.getSelectedItem().toString();
+        String no_telp=jTextNomorHP.getText();
+        String alamat=jTextAlamat.getText();
 
         java.util.Date tanggal = new java.util.Date();
         java.text.SimpleDateFormat TanggalFormat= new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -546,19 +548,19 @@ public class MMahasiswa extends javax.swing.JFrame {
         if (NIM.isEmpty() ) {
             JOptionPane.showMessageDialog(this,"NIM tidak boleh kosong");
             jTextNIM.requestFocus();
-        }else if (Semester.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Semester tidak boleh kosong");
+        }else if (semester.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"semester tidak boleh kosong");
             jComboBoxSemester.requestFocus();
-        }else if (Nama.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Nama tidak boleh kosong");
+        }else if (nama.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"nama tidak boleh kosong");
             jTextNama.requestFocus();
-        }else if (Jeniskelamin.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Jenis kelamin tidak boleh kosong");
+        }else if (kelamin.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"kelamin tidak boleh kosong");
             jComboBoxJeniskelamin.requestFocus();
-        }else if (NomorHP.isEmpty()) {
+        }else if (no_telp.isEmpty()) {
             JOptionPane.showMessageDialog(this,"Nomor HP tidak boleh kosong");
             jTextNomorHP.requestFocus();
-        }else if (Alamat.isEmpty()) {
+        }else if (alamat.isEmpty()) {
             JOptionPane.showMessageDialog(this,"Alamat tidak boleh kosong");
             jTextAlamat.requestFocus();
         }
@@ -569,8 +571,8 @@ public class MMahasiswa extends javax.swing.JFrame {
             try{
                 Connection conn=(Connection)koneksi.koneksiDB();
                 Statement stt=conn.createStatement();
-                stt.executeUpdate("UPDATE mahasiswa set Semester='"+Semester+"',Nama='"+Nama+"', Jeniskelamin='"+Jeniskelamin+"', NomorHP='"+NomorHP+"',"+"Alamat='"+Alamat+"' WHERE NIM='"+NIM+"'");
-                System.out.println("UPDATE mahasiswa set Semester='"+Semester+"',Nama='"+Nama+"', Jeniskelamin='"+Jeniskelamin+"', NomorHP='"+NomorHP+"',"+"Alamat='"+Alamat+"' WHERE NIM='"+NIM+"'");
+                stt.executeUpdate("UPDATE mhs set semester='"+semester+"',nama='"+nama+"', kelamin='"+kelamin+"', no_telp='"+no_telp+"',"+"alamat='"+alamat+"' WHERE NIM='"+NIM+"'");
+                System.out.println("UPDATE mhs set semester='"+semester+"',nama='"+nama+"', kelamin='"+kelamin+"', no_telp='"+no_telp+"',"+"alamat='"+alamat+"' WHERE NIM='"+NIM+"'");
                 BersihData();
                 tampilData();
                 SetEditOff();
@@ -593,7 +595,7 @@ public class MMahasiswa extends javax.swing.JFrame {
         try{
             Connection conn=(Connection)koneksi.koneksiDB();
             Statement stt=conn.createStatement();
-            stt.executeUpdate("DELETE FROM mahasiswa WHERE NIM='"+NIM+"'");
+            stt.executeUpdate("DELETE FROM mhs WHERE NIM='"+NIM+"'");
             BersihData();
             tampilData();
             SetEditOff();
@@ -668,7 +670,11 @@ public class MMahasiswa extends javax.swing.JFrame {
     private void jButtonRekapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRekapActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        new Rekap().setVisible(true);
+        try {
+            new Rekap().setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(MMahasiswa.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButtonRekapActionPerformed
 
     /**
